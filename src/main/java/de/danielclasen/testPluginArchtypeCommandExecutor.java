@@ -36,6 +36,7 @@ public class testPluginArchtypeCommandExecutor implements CommandExecutor {
 
         if (command.getName().equalsIgnoreCase("command")) {
 	    plugin.getLogger().info("command used");
+	    plugin.getLogger().warning("i do a warning!");
             //do something
             return true;
         }
