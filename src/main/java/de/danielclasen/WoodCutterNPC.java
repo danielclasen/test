@@ -17,6 +17,8 @@ package de.danielclasen;
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import net.citizensnpcs.api.CitizensAPI;
+
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,7 +36,10 @@ public class WoodCutterNPC extends JavaPlugin {
 	public void onEnable() { 
 
 		PluginManager pm = this.getServer().getPluginManager();
-
+		
+		
+		
+		
 		getCommand("command").setExecutor(commandExecutor);
 
 		// you can register multiple classes to handle events if you want
