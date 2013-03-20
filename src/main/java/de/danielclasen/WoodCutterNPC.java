@@ -1,7 +1,7 @@
 package de.danielclasen;
 
 /*
-    This file is part of testPluginArchtype
+    This file is part of WoodCutterNPC
 
     Foobar is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@ package de.danielclasen;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class testPluginArchtype extends JavaPlugin {
+public class WoodCutterNPC extends JavaPlugin {
 
 	//ClassListeners
-	private final testPluginArchtypeCommandExecutor commandExecutor = new testPluginArchtypeCommandExecutor(this);
-	private final testPluginArchtypeEventListener eventListener = new testPluginArchtypeEventListener(this);
+	private final WoodCutterNPCCommandExecutor commandExecutor = new WoodCutterNPCCommandExecutor(this);
+	private final WoodCutterNPCEventListener eventListener = new WoodCutterNPCEventListener(this);
 	//ClassListeners
 
 	public void onDisable() {

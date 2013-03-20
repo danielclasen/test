@@ -1,7 +1,7 @@
 package de.danielclasen;
 
 /*
-    This file is part of testPluginArchtype
+    This file is part of WoodCutterNPC
 
     Foobar is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,17 +22,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class testPluginArchtypeCommandExecutor implements CommandExecutor {
+public class WoodCutterNPCCommandExecutor implements CommandExecutor {
 
-    private testPluginArchtype plugin;
+    private WoodCutterNPC plugin;
 
-    public testPluginArchtypeCommandExecutor(testPluginArchtype plugin) {
+    public WoodCutterNPCCommandExecutor(WoodCutterNPC plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        plugin.getLogger().info("onCommand Reached in testPluginArchtype");
+        plugin.getLogger().info("onCommand Reached in WoodCutterNPC");
 
         if (command.getName().equalsIgnoreCase("command")) {
 	    plugin.getLogger().info("command used");

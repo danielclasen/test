@@ -1,5 +1,5 @@
-name: testPluginArchtype
-main: de.danielclasen.testPluginArchtype
+name: WoodCutterNPC
+main: de.danielclasen.WoodCutterNPC
 version: 0.1
 
 commands:
