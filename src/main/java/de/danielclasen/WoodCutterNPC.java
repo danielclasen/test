@@ -143,17 +143,20 @@ public class WoodCutterNPC extends JavaPlugin {
 	private void fetchUpdateFromJenkins(String targetArtifact) {
 		URL jenkinsChannel;
 		try {
+			
+			log.info("Fetching Update version: "+targetArtifact);
 			jenkinsChannel = new URL(
 					"http://ci.danielclasen.de/jenkins/job/WoodCutterNPC/lastStableBuild/artifact/target/"
 							+ targetArtifact);
 			ReadableByteChannel rbc = Channels.newChannel(jenkinsChannel
 					.openStream());
-
+			log.info("Fetching update complete, installing now.");
 			try {
 				deleteOldVersions();
 				FileOutputStream fos = new FileOutputStream("plugins/"
 						+ targetArtifact);
 				fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+				log.info("Update successfully installed. Version: "+targetArtifact);
 			} catch (IllegalArgumentException e) {
 				// TODO: handle exception
 				log.severe("Old version " + this.currentArtifact
