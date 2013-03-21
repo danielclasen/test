@@ -57,6 +57,7 @@ public class WoodCutterNPC extends JavaPlugin {
 
 	public void onDisable() {
 		// add any code you want to be executed when your plugin is disabled
+		checkUpdateAtJenkins();
 	}
 
 	public void onEnable() {
@@ -83,7 +84,7 @@ public class WoodCutterNPC extends JavaPlugin {
 
 		}
 		
-		checkUpdateAtJenkins();
+		
 		// do any other initialisation you need here...
 	}
 
@@ -127,7 +128,7 @@ public class WoodCutterNPC extends JavaPlugin {
 			e.printStackTrace();
 		}
 
-		// jsp.parse(arg0)
+
 	}
 
 	private void fetchUpdateFromJenkins(String targetArtifact) {
@@ -144,7 +145,7 @@ public class WoodCutterNPC extends JavaPlugin {
 				fos.getChannel().transferFrom(rbc, 0, 1 << 24);
 			} catch (IllegalArgumentException e) {
 				// TODO: handle exception
-				log.severe("Old version "+this.currentArtifact+" could not be deleted!");
+				log.severe("Old version "+this.currentArtifact+" could not be deleted! "+e.toString());
 			}
 			
 			
