@@ -19,6 +19,7 @@ package de.danielclasen;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,6 +37,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -49,6 +51,7 @@ public class WoodCutterNPC extends JavaPlugin {
 	// ClassListeners
 
 	private String currentArtifact = "WoodCutterNPC-0.0.1-SNAPSHOT.jar";
+	private boolean updatedCurrently = false;
 	
 	public final Logger log = Bukkit.getServer().getLogger();
 
@@ -108,12 +111,13 @@ public class WoodCutterNPC extends JavaPlugin {
 				while((line=reader.readLine())!=null){
 				    result+=line;
 				}
-				
-				System.out.println(result);
-				log.info(result);
-				
 				JSONObject responseJSON = (JSONObject) jsp.parse(result);
-				log.info("Latest Build Revision at Jenkins Repo is: "+responseJSON.get("number")+" ("+responseJSON.get("fullDisplayName")+")");				
+				log.info("Latest Build Revision at Jenkins Repo is: "+responseJSON.get("number")+" ("+responseJSON.get("fullDisplayName")+")");		
+				
+				JSONArray artifacts = ((JSONArray)responseJSON.get("artifacts"));
+				String targetArtifact = (String) ((JSONObject) artifacts.get(0)).get("relativePath");
+				
+				fetchUpdateFromJenkins(targetArtifact);
 			}
 		} catch (Exception e) {// TODO: detailed exception handling, detailed
 			// exceptions available, but ignored for the
@@ -130,11 +134,22 @@ public class WoodCutterNPC extends JavaPlugin {
 		URL jenkinsChannel;
 		try {
 			jenkinsChannel = new URL(
-					"http://ci.danielclasen.de/jenkins/job/WoodCutterNPC/lastStableBuild/artifact/target/");
+					"http://ci.danielclasen.de/jenkins/job/WoodCutterNPC/lastStableBuild/artifact/target/"+targetArtifact);
 			ReadableByteChannel rbc = Channels.newChannel(jenkinsChannel
 					.openStream());
-			FileOutputStream fos = new FileOutputStream(targetArtifact);
-			fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+			
+			try {
+				deleteOldVersion();
+				FileOutputStream fos = new FileOutputStream(targetArtifact);
+				fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+			} catch (IllegalArgumentException e) {
+				// TODO: handle exception
+				log.severe("Old version "+this.currentArtifact+" could not be deleted!");
+			}
+			
+			
+			
+			
 		} catch (Exception e) { // TODO: detailed exception handling, detailed
 								// exceptions available, but ignored for the
 								// moment
@@ -143,4 +158,36 @@ public class WoodCutterNPC extends JavaPlugin {
 		}
 
 	}
+	
+	private void deleteOldVersion(){
+		
+		String fileName = this.currentArtifact;
+	    // A File object to represent the filename
+	    File f = new File(fileName);
+
+	    // Make sure the file or directory exists and isn't write protected
+	    if (!f.exists())
+	      throw new IllegalArgumentException(
+	          "Delete: no such file or directory: " + fileName);
+
+	    if (!f.canWrite())
+	      throw new IllegalArgumentException("Delete: write protected: "
+	          + fileName);
+
+	    // If it is a directory, make sure it is empty
+	    if (f.isDirectory()) {
+	      String[] files = f.list();
+	      if (files.length > 0)
+	        throw new IllegalArgumentException(
+	            "Delete: directory not empty: " + fileName);
+	    }
+
+	    // Attempt to delete it
+	    boolean success = f.delete();
+
+	    if (!success)
+	      throw new IllegalArgumentException("Delete: deletion failed");
+	  }
+		
+	
 }
