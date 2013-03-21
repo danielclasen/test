@@ -207,9 +207,11 @@ public class WoodCutterNPC extends JavaPlugin {
 
 			// Attempt to delete it
 			boolean success = f.delete();
+			
+			
 
 			if (!success)
-				throw new IllegalArgumentException("Delete: deletion failed");
+				f.deleteOnExit();
 		}
 	}
 
