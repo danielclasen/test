@@ -165,7 +165,7 @@ public class WoodCutterNPC extends JavaPlugin {
 				// TODO: handle exception
 				log.severe("Old version " + this.currentArtifact
 						+ " could not be deleted! " + e.toString());
-			}
+			} 
 
 		} catch (Exception e) { // TODO: detailed exception handling, detailed
 								// exceptions available, but ignored for the
