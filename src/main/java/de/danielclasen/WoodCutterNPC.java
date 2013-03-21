@@ -17,6 +17,8 @@ package de.danielclasen;
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.logging.Level;
+
 import net.citizensnpcs.api.CitizensAPI;
 
 import org.bukkit.plugin.PluginManager;
@@ -35,16 +37,21 @@ public class WoodCutterNPC extends JavaPlugin {
 
 	public void onEnable() { 
 
-		PluginManager pm = this.getServer().getPluginManager();
-		
-		
-		
-		
+		PluginManager pm = this.getServer().getPluginManager();		
 		getCommand("command").setExecutor(commandExecutor);
 
 		// you can register multiple classes to handle events if you want
 		// just call pm.registerEvents() on an instance of each class
 		pm.registerEvents(eventListener, this);
+		
+		if(getServer().getPluginManager().getPlugin("Citizens") == null || getServer().getPluginManager().getPlugin("Citizens").isEnabled() == false) {
+			getLogger().log(Level.SEVERE, "Citizens 2.0 not found or not enabled");
+			getServer().getPluginManager().disablePlugin(this);	
+			return;
+		}	
+ 
+		//Register your trait with Citizens.        
+		CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(WoodCutterNPCTrait.class).withName("Woodcutter"));
 
 		// do any other initialisation you need here...
 	}
