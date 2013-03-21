@@ -59,7 +59,7 @@ public class WoodCutterNPC extends JavaPlugin {
 	private boolean updatedCurrently = false;
 
 
-	public Logger log = this.getLogger();
+	public Logger log;
 
 	public void onDisable() {
 		// add any code you want to be executed when your plugin is disabled
@@ -67,7 +67,9 @@ public class WoodCutterNPC extends JavaPlugin {
 	}
 
 	public void onEnable() {
-
+		
+		log = getLogger();
+		
 		PluginManager pm = this.getServer().getPluginManager();
 		getCommand("command").setExecutor(commandExecutor);
 
