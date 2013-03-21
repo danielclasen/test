@@ -21,9 +21,11 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.lang.annotation.Annotation;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,6 +33,9 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.annotation.RegEx;
+import javax.annotation.meta.When;
 
 import net.citizensnpcs.api.CitizensAPI;
 
@@ -52,8 +57,9 @@ public class WoodCutterNPC extends JavaPlugin {
 
 	private String currentArtifact = "WoodCutterNPC-0.0.1-SNAPSHOT.jar";
 	private boolean updatedCurrently = false;
-	
-	public final Logger log = Bukkit.getServer().getLogger();
+
+
+	public final Logger log = this.getLogger();
 
 	public void onDisable() {
 		// add any code you want to be executed when your plugin is disabled
@@ -83,8 +89,7 @@ public class WoodCutterNPC extends JavaPlugin {
 							WoodCutterNPCTrait.class).withName("Woodcutter"));
 
 		}
-		
-		
+
 		// do any other initialisation you need here...
 	}
 
@@ -101,23 +106,28 @@ public class WoodCutterNPC extends JavaPlugin {
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
 				String response = conn.getResponseMessage();
 				log.severe(response);
-				
+
 			} else {
 				// Verarbeitung des Ergebnisses
 				InputStream response = (InputStream) conn.getContent();
-				
-				BufferedReader reader = new BufferedReader(new InputStreamReader(response));
+
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(response));
 				String result, line = reader.readLine();
 				result = line;
-				while((line=reader.readLine())!=null){
-				    result+=line;
+				while ((line = reader.readLine()) != null) {
+					result += line;
 				}
 				JSONObject responseJSON = (JSONObject) jsp.parse(result);
-				log.info("Latest Build Revision at Jenkins Repo is: "+responseJSON.get("number")+" ("+responseJSON.get("fullDisplayName")+")");		
-				
-				JSONArray artifacts = ((JSONArray)responseJSON.get("artifacts"));
-				String targetArtifact = (String) ((JSONObject) artifacts.get(0)).get("fileName");
-				
+				log.info("Latest Build Revision at Jenkins Repo is: "
+						+ responseJSON.get("number") + " ("
+						+ responseJSON.get("fullDisplayName") + ")");
+
+				JSONArray artifacts = ((JSONArray) responseJSON
+						.get("artifacts"));
+				String targetArtifact = (String) ((JSONObject) artifacts.get(0))
+						.get("fileName");
+
 				fetchUpdateFromJenkins(targetArtifact);
 			}
 		} catch (Exception e) {// TODO: detailed exception handling, detailed
@@ -128,29 +138,28 @@ public class WoodCutterNPC extends JavaPlugin {
 			e.printStackTrace();
 		}
 
-
 	}
 
 	private void fetchUpdateFromJenkins(String targetArtifact) {
 		URL jenkinsChannel;
 		try {
 			jenkinsChannel = new URL(
-					"http://ci.danielclasen.de/jenkins/job/WoodCutterNPC/lastStableBuild/artifact/target/"+targetArtifact);
+					"http://ci.danielclasen.de/jenkins/job/WoodCutterNPC/lastStableBuild/artifact/target/"
+							+ targetArtifact);
 			ReadableByteChannel rbc = Channels.newChannel(jenkinsChannel
 					.openStream());
-			
+
 			try {
-				deleteOldVersion();
-				FileOutputStream fos = new FileOutputStream("plugins/"+targetArtifact);
+				deleteOldVersions();
+				FileOutputStream fos = new FileOutputStream("plugins/"
+						+ targetArtifact);
 				fos.getChannel().transferFrom(rbc, 0, 1 << 24);
 			} catch (IllegalArgumentException e) {
 				// TODO: handle exception
-				log.severe("Old version "+this.currentArtifact+" could not be deleted! "+e.toString());
+				log.severe("Old version " + this.currentArtifact
+						+ " could not be deleted! " + e.toString());
 			}
-			
-			
-			
-			
+
 		} catch (Exception e) { // TODO: detailed exception handling, detailed
 								// exceptions available, but ignored for the
 								// moment
@@ -159,36 +168,44 @@ public class WoodCutterNPC extends JavaPlugin {
 		}
 
 	}
-	
-	private void deleteOldVersion(){
-		
-		String fileName = this.currentArtifact;
-	    // A File object to represent the filename
-	    File f = new File("plugins/"+fileName);
 
-	    // Make sure the file or directory exists and isn't write protected
-	    if (!f.exists())
-	      throw new IllegalArgumentException(
-	          "Delete: no such file or directory: " + fileName);
+	private void deleteOldVersions() {
 
-	    if (!f.canWrite())
-	      throw new IllegalArgumentException("Delete: write protected: "
-	          + fileName);
+		File dir = new File("plugins");
+		File[] files = dir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".jar")
+						&& name.startsWith("WoodCutterNPC");
+			}
+		});
 
-	    // If it is a directory, make sure it is empty
-	    if (f.isDirectory()) {
-	      String[] files = f.list();
-	      if (files.length > 0)
-	        throw new IllegalArgumentException(
-	            "Delete: directory not empty: " + fileName);
-	    }
+		for (File f : files) {
+			
+			log.info("Deleting old Version "+f.getName());
+			// Make sure the file or directory exists and isn't write protected
+			if (!f.exists())
+				throw new IllegalArgumentException(
+						"Delete: no such file or directory: " + f.getName());
 
-	    // Attempt to delete it
-	    boolean success = f.delete();
+			if (!f.canWrite())
+				throw new IllegalArgumentException("Delete: write protected: "
+						+ f.getName());
 
-	    if (!success)
-	      throw new IllegalArgumentException("Delete: deletion failed");
-	  }
-		
-	
+			// If it is a directory, make sure it is empty
+			if (f.isDirectory()) {
+				String[] files1 = f.list();
+				if (files1.length > 0)
+					throw new IllegalArgumentException(
+							"Delete: directory not empty: " + f.getName());
+			}
+
+			// Attempt to delete it
+			boolean success = f.delete();
+
+			if (!success)
+				throw new IllegalArgumentException("Delete: deletion failed");
+		}
+	}
+
 }
