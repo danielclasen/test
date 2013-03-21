@@ -31,7 +31,8 @@ public class WoodCutterNPCTrait extends Trait  {
 			//Be sure to check event.getNPC() == this.getNPC() so you only handle clicks on this NPC!
 			
 			if (event.getNPC() == this.getNPC()){
-				event.getNPC().getDefaultSpeechController().speak(new SpeechContext("hello"));				
+				event.getNPC().getDefaultSpeechController().speak(new SpeechContext("hello"));
+				log.info(event.getNPC().getFullName() + " was clicked by " + event.getClicker().getDisplayName());
 			}
 	 
 		}
