@@ -91,18 +91,21 @@ public class WoodCutterNPC extends JavaPlugin {
 			conn.setUseCaches(false);
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
 				String response = conn.getResponseMessage();
-				System.out.println(response);
-				log.info(response);
-				JSONObject responseJSON = (JSONObject) jsp.parse(response);
-				log.info("Latest Build Revision at Jenkins Repo is: "+responseJSON.get("number")+" ("+responseJSON.get("fullDisplayName")+")");
+				log.severe(response);
 				
 			} else {
 				// Verarbeitung des Ergebnisses
+				String response = conn.getResponseMessage();
+				System.out.println(response);
+				log.info(response);
+				JSONObject responseJSON = (JSONObject) jsp.parse(response);
+				log.info("Latest Build Revision at Jenkins Repo is: "+responseJSON.get("number")+" ("+responseJSON.get("fullDisplayName")+")");				
 			}
 		} catch (Exception e) {// TODO: detailed exception handling, detailed
 			// exceptions available, but ignored for the
 			// moment
 			// TODO Auto-generated catch block
+			log.severe(e.toString());
 			e.printStackTrace();
 		}
 
