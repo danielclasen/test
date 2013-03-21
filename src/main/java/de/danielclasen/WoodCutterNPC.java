@@ -74,6 +74,8 @@ public class WoodCutterNPC extends JavaPlugin {
 							WoodCutterNPCTrait.class).withName("Woodcutter"));
 
 		}
+		
+		checkUpdateAtJenkins();
 		// do any other initialisation you need here...
 	}
 
