@@ -141,7 +141,7 @@ public class WoodCutterNPC extends JavaPlugin {
 			
 			try {
 				deleteOldVersion();
-				FileOutputStream fos = new FileOutputStream(targetArtifact);
+				FileOutputStream fos = new FileOutputStream("plugins/"+targetArtifact);
 				fos.getChannel().transferFrom(rbc, 0, 1 << 24);
 			} catch (IllegalArgumentException e) {
 				// TODO: handle exception
@@ -164,7 +164,7 @@ public class WoodCutterNPC extends JavaPlugin {
 		
 		String fileName = this.currentArtifact;
 	    // A File object to represent the filename
-	    File f = new File(fileName);
+	    File f = new File("plugins/"+fileName);
 
 	    // Make sure the file or directory exists and isn't write protected
 	    if (!f.exists())
