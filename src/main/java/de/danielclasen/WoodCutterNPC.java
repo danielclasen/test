@@ -17,7 +17,12 @@ package de.danielclasen;
  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -95,10 +100,19 @@ public class WoodCutterNPC extends JavaPlugin {
 				
 			} else {
 				// Verarbeitung des Ergebnisses
-				JSONObject response = (JSONObject) conn.getContent();
-				System.out.println(response);
-				log.info(response.toString());
-				JSONObject responseJSON = response;//(JSONObject) jsp.parse(response);
+				InputStream response = (InputStream) conn.getContent();
+				
+				BufferedReader reader = new BufferedReader(new InputStreamReader(response));
+				String result, line = reader.readLine();
+				result = line;
+				while((line=reader.readLine())!=null){
+				    result+=line;
+				}
+				
+				System.out.println(result);
+				log.info(result);
+				
+				JSONObject responseJSON = (JSONObject) jsp.parse(result);
 				log.info("Latest Build Revision at Jenkins Repo is: "+responseJSON.get("number")+" ("+responseJSON.get("fullDisplayName")+")");				
 			}
 		} catch (Exception e) {// TODO: detailed exception handling, detailed
