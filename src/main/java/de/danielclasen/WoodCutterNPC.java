@@ -70,6 +70,8 @@ public class WoodCutterNPC extends JavaPlugin {
 		
 		log = getLogger();
 		
+		deleteOldVersions(".deprecated");
+		
 		PluginManager pm = this.getServer().getPluginManager();
 		getCommand("command").setExecutor(commandExecutor);
 
@@ -91,7 +93,7 @@ public class WoodCutterNPC extends JavaPlugin {
 							WoodCutterNPCTrait.class).withName("Woodcutter"));
 
 		}
-
+		
 		// do any other initialisation you need here...
 	}
 
@@ -173,14 +175,18 @@ public class WoodCutterNPC extends JavaPlugin {
 		}
 
 	}
-
-	private void deleteOldVersions() {
+	
+	private void deleteOldVersions(){
+		deleteOldVersions("");
+	}
+	
+	private void deleteOldVersions(final String endHook) {
 
 		File dir = new File("plugins");
 		File[] files = dir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.endsWith(".jar")
+				return name.endsWith(".jar"+endHook)
 						&& name.startsWith("WoodCutterNPC");
 			}
 		});
@@ -211,7 +217,7 @@ public class WoodCutterNPC extends JavaPlugin {
 			
 
 			if (!success)
-				f.deleteOnExit();
+				f.renameTo(new File(f.getName()+".jar.deprecated"));
 		}
 	}
 

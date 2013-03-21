@@ -64,7 +64,7 @@
 				<configuration>
 					<doCheck>true</doCheck>
 					<doUpdate>true</doUpdate>
-					<format>${version}.{0,number}-SNAPSHOT</format>
+					<format>${project.version}.{0,number}-SNAPSHOT</format>
 					<items>
 						<item>buildNumber</item>
 					</items>
