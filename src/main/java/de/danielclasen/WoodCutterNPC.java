@@ -55,7 +55,7 @@ public class WoodCutterNPC extends JavaPlugin {
 			this);
 	// ClassListeners
 
-	private String currentArtifact = "WoodCutterNPC-0.0.1-SNAPSHOT.jar";
+	private String currentArtifact = "WoodCutterNPC-0.0.2-SNAPSHOT.jar";
 	private boolean updatedCurrently = false;
 
 
@@ -131,8 +131,9 @@ public class WoodCutterNPC extends JavaPlugin {
 						.get("artifacts"));
 				String targetArtifact = (String) ((JSONObject) artifacts.get(0))
 						.get("fileName");
-
-				fetchUpdateFromJenkins(targetArtifact);
+				
+				if (genericVersion(targetArtifact) > genericVersion(this.currentArtifact)) //Only update if repository artifact genVersion is greater than actual				
+					fetchUpdateFromJenkins(targetArtifact);
 			}
 		} catch (Exception e) {// TODO: detailed exception handling, detailed
 			// exceptions available, but ignored for the
@@ -219,6 +220,11 @@ public class WoodCutterNPC extends JavaPlugin {
 			if (!success)
 				f.renameTo(new File(f.getName()+".jar.deprecated"));
 		}
+	}
+	
+	
+	public double genericVersion(String artifactName){		
+			return Double.valueOf(artifactName.replaceAll("\\D", ""))/Math.pow(10,(artifactName.replaceAll("\\D", "").length()-1));
 	}
 
 }
