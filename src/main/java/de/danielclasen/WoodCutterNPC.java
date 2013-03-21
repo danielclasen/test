@@ -21,6 +21,7 @@ import java.util.logging.Level;
 
 import net.citizensnpcs.api.CitizensAPI;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,11 +45,11 @@ public class WoodCutterNPC extends JavaPlugin {
 		// just call pm.registerEvents() on an instance of each class
 		pm.registerEvents(eventListener, this);
 		
-		if(getServer().getPluginManager().getPlugin("Citizens") == null || getServer().getPluginManager().getPlugin("Citizens").isEnabled() == false) {
-			getLogger().log(Level.SEVERE, "Citizens 2.0 not found or not enabled");
-			getServer().getPluginManager().disablePlugin(this);	
-			return;
-		}	
+//		if(Bukkit.getServer().getPluginManager().getPlugin("Citizens") == null || Bukkit.getServer().getPluginManager().getPlugin("Citizens").isEnabled() == false) {
+//			getLogger().log(Level.SEVERE, "Citizens 2.0 not found or not enabled");
+//			getServer().getPluginManager().disablePlugin(this);	
+//			return;
+//		}	
  
 		//Register your trait with Citizens.        
 		CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(WoodCutterNPCTrait.class).withName("Woodcutter"));
