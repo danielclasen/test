@@ -1,6 +1,7 @@
 name: WoodCutterNPC
 main: de.danielclasen.WoodCutterNPC
 version: 0.1
+depend: [Citizens]
 
 commands:
    command:
