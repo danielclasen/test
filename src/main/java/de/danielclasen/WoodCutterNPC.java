@@ -40,6 +40,7 @@ import javax.annotation.meta.When;
 import net.citizensnpcs.api.CitizensAPI;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
@@ -56,8 +57,8 @@ public class WoodCutterNPC extends JavaPlugin {
 	// ClassListeners
 
 	private String currentArtifact = "WoodCutterNPC-0.0.2-SNAPSHOT.jar";
-	private boolean updatedCurrently = false;
-
+	private String updateFolder = YamlConfiguration.loadConfiguration(new File("bukkit.yml")).getString("settings.update-folder"); // The folder that downloads will be placed in
+	private String version = getDescription().getVersion();
 
 	public Logger log;
 
