@@ -134,7 +134,7 @@ public class WoodCutterNPC extends JavaPlugin {
 			// exceptions available, but ignored for the
 			// moment
 			// TODO Auto-generated catch block
-			log.severe(e.toString());
+			log.severe("there was an error!");
 			e.printStackTrace();
 		}
 
