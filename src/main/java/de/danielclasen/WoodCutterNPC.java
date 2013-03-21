@@ -115,7 +115,7 @@ public class WoodCutterNPC extends JavaPlugin {
 				log.info("Latest Build Revision at Jenkins Repo is: "+responseJSON.get("number")+" ("+responseJSON.get("fullDisplayName")+")");		
 				
 				JSONArray artifacts = ((JSONArray)responseJSON.get("artifacts"));
-				String targetArtifact = (String) ((JSONObject) artifacts.get(0)).get("relativePath");
+				String targetArtifact = (String) ((JSONObject) artifacts.get(0)).get("fileName");
 				
 				fetchUpdateFromJenkins(targetArtifact);
 			}
