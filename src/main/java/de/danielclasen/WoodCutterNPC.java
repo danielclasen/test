@@ -57,8 +57,17 @@ public class WoodCutterNPC extends JavaPlugin {
 	// ClassListeners
 
 	private String currentArtifact = "WoodCutterNPC-0.0.2-SNAPSHOT.jar";
-	private String updateFolder = YamlConfiguration.loadConfiguration(new File("bukkit.yml")).getString("settings.update-folder"); // The folder that downloads will be placed in
+	private String updateFolder = YamlConfiguration.loadConfiguration(
+			new File("bukkit.yml")).getString("settings.update-folder"); // The
+																			// folder
+																			// that
+																			// downloads
+																			// will
+																			// be
+																			// placed
+																			// in
 	private String version = getDescription().getVersion();
+	private String pluginFileName = getDescription().getName() + ".jar";
 
 	public Logger log;
 
@@ -68,11 +77,11 @@ public class WoodCutterNPC extends JavaPlugin {
 	}
 
 	public void onEnable() {
-		
+
 		log = getLogger();
-		
+
 		deleteOldVersions(".deprecated");
-		
+
 		PluginManager pm = this.getServer().getPluginManager();
 		getCommand("command").setExecutor(commandExecutor);
 
@@ -94,7 +103,7 @@ public class WoodCutterNPC extends JavaPlugin {
 							WoodCutterNPCTrait.class).withName("Woodcutter"));
 
 		}
-		
+
 		// do any other initialisation you need here...
 	}
 
@@ -132,8 +141,8 @@ public class WoodCutterNPC extends JavaPlugin {
 						.get("artifacts"));
 				String targetArtifact = (String) ((JSONObject) artifacts.get(0))
 						.get("fileName");
-				
-				if (genericVersion(targetArtifact) > genericVersion(this.currentArtifact)) //Only update if repository artifact genVersion is greater than actual				
+
+				//if (genericVersion(targetArtifact) > genericVersion(this.currentArtifact))
 					fetchUpdateFromJenkins(targetArtifact);
 			}
 		} catch (Exception e) {// TODO: detailed exception handling, detailed
@@ -149,8 +158,8 @@ public class WoodCutterNPC extends JavaPlugin {
 	private void fetchUpdateFromJenkins(String targetArtifact) {
 		URL jenkinsChannel;
 		try {
-			
-			log.info("Fetching Update version: "+targetArtifact);
+
+			log.info("Fetching Update version: " + targetArtifact);
 			jenkinsChannel = new URL(
 					"http://ci.danielclasen.de/jenkins/job/WoodCutterNPC/lastStableBuild/artifact/target/"
 							+ targetArtifact);
@@ -160,14 +169,15 @@ public class WoodCutterNPC extends JavaPlugin {
 			try {
 				deleteOldVersions();
 				FileOutputStream fos = new FileOutputStream("plugins/"
-						+ targetArtifact);
+						+ updateFolder + "/" + pluginFileName);
 				fos.getChannel().transferFrom(rbc, 0, 1 << 24);
-				log.info("Update successfully installed. Version: "+targetArtifact);
+				log.info("Update successfully installed. Version: "
+						+ targetArtifact);
 			} catch (IllegalArgumentException e) {
 				// TODO: handle exception
 				log.severe("Old version " + this.currentArtifact
 						+ " could not be deleted! " + e.toString());
-			} 
+			}
 
 		} catch (Exception e) { // TODO: detailed exception handling, detailed
 								// exceptions available, but ignored for the
@@ -177,25 +187,25 @@ public class WoodCutterNPC extends JavaPlugin {
 		}
 
 	}
-	
-	private void deleteOldVersions(){
+
+	private void deleteOldVersions() {
 		deleteOldVersions("");
 	}
-	
+
 	private void deleteOldVersions(final String endHook) {
 
-		File dir = new File("plugins");
+		File dir = new File("plugins/" + updateFolder);
 		File[] files = dir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.endsWith(".jar"+endHook)
+				return name.endsWith(".jar" + endHook)
 						&& name.startsWith("WoodCutterNPC");
 			}
 		});
 
 		for (File f : files) {
-			
-			log.info("Deleting old Version "+f.getName());
+
+			log.info("Deleting old Updates " + f.getName());
 			// Make sure the file or directory exists and isn't write protected
 			if (!f.exists())
 				throw new IllegalArgumentException(
@@ -215,17 +225,16 @@ public class WoodCutterNPC extends JavaPlugin {
 
 			// Attempt to delete it
 			boolean success = f.delete();
-			
-			
 
 			if (!success)
-				f.renameTo(new File(f.getName()+".jar.deprecated"));
+				f.renameTo(new File(f.getName() + ".jar.deprecated"));
 		}
 	}
-	
-	
-	public double genericVersion(String artifactName){		
-			return Double.valueOf(artifactName.replaceAll("\\D", ""))/Math.pow(10,(artifactName.replaceAll("\\D", "").length()-1));
+
+	public double genericVersion(String artifactName) {
+		return Double.valueOf(artifactName.replaceAll("\\D", ""))
+				/ Math.pow(10,
+						(artifactName.replaceAll("\\D", "").length() - 1));
 	}
 
 }
