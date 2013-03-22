@@ -72,6 +72,7 @@ public class WoodCutterNPC extends JavaPlugin {
 		log.info("from repo");
 		
 		deleteOldVersions(".deprecated");
+		deleteOldVersions();
 
 		PluginManager pm = this.getServer().getPluginManager();
 		getCommand("command").setExecutor(commandExecutor);
