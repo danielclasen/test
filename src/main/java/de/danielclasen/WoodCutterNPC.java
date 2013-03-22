@@ -69,6 +69,8 @@ public class WoodCutterNPC extends JavaPlugin {
 				new File("bukkit.yml")).getString("settings.update-folder");
 		pluginFileName = getDescription().getName() + ".jar";
 		
+		log.info("from repo");
+		
 		deleteOldVersions(".deprecated");
 
 		PluginManager pm = this.getServer().getPluginManager();
