@@ -18,24 +18,17 @@ package de.danielclasen;
  */
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.lang.annotation.Annotation;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.annotation.RegEx;
-import javax.annotation.meta.When;
 
 import net.citizensnpcs.api.CitizensAPI;
 
@@ -57,17 +50,9 @@ public class WoodCutterNPC extends JavaPlugin {
 	// ClassListeners
 
 	private String currentArtifact = "WoodCutterNPC-0.0.2-SNAPSHOT.jar";
-	private String updateFolder = YamlConfiguration.loadConfiguration(
-			new File("bukkit.yml")).getString("settings.update-folder"); // The
-																			// folder
-																			// that
-																			// downloads
-																			// will
-																			// be
-																			// placed
-																			// in
-	private String version = getDescription().getVersion();
-	private String pluginFileName = getDescription().getName() + ".jar";
+	private String updateFolder;
+	private String version;
+	private String pluginFileName;
 
 	public Logger log;
 
@@ -79,7 +64,11 @@ public class WoodCutterNPC extends JavaPlugin {
 	public void onEnable() {
 
 		log = getLogger();
-
+		version = getDescription().getVersion();
+		updateFolder = YamlConfiguration.loadConfiguration(
+				new File("bukkit.yml")).getString("settings.update-folder");
+		pluginFileName = getDescription().getName() + ".jar";
+		
 		deleteOldVersions(".deprecated");
 
 		PluginManager pm = this.getServer().getPluginManager();
